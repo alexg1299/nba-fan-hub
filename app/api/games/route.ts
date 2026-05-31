@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
-import { fetchRecentGames, normalizeGameStatus } from "@/lib/nba-api";
+import { fetchRecentGames, fetchAllSeasonGames, normalizeGameStatus } from "@/lib/nba-api";
 import { MOCK_GAMES } from "@/lib/mock-data";
 import type { NormalizedGame } from "@/types/nba";
 
-export const revalidate = 60; // ISR: revalidate every 60 seconds
+export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const season = searchParams.get("season") ? Number(searchParams.get("season")) : undefined;
+  const fetchAll = searchParams.get("all") === "true";
   try {
-    const raw = await fetchRecentGames(15);
+    const raw = fetchAll
+      ? await fetchAllSeasonGames(season)
+      : await fetchRecentGames(15, season);
 
     const normalized: NormalizedGame[] = raw.map((game) => {
       const { isFinished, isLive, isUpcoming } = normalizeGameStatus(game);

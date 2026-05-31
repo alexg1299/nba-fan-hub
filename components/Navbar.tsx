@@ -2,14 +2,16 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon, Activity, Trophy, Users, Menu, X } from "lucide-react";
+import { Sun, Moon, Activity, Trophy, Users, Menu, X, ChevronDown, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { useSeason, AVAILABLE_SEASONS, seasonLabel } from "@/app/context/season-context";
 
 const NAV_LINKS = [
   { href: "/", label: "Scores", icon: Activity },
   { href: "/standings", label: "Standings", icon: Trophy },
+  { href: "/teams", label: "Teams", icon: Shield },
   { href: "/players", label: "Players", icon: Users },
 ];
 
@@ -18,6 +20,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { season, setSeason } = useSeason();
 
   useEffect(() => setMounted(true), []);
 
@@ -74,6 +77,29 @@ export default function Navbar() {
 
           {/* Right controls */}
           <div className="flex items-center gap-2">
+            {/* Season selector */}
+            {mounted && (
+              <div className="relative">
+                <div
+                  className="flex items-center gap-1.5 h-9 px-3 rounded-lg font-display font-600 text-xs tracking-wider uppercase cursor-pointer select-none"
+                  style={{ color: "var(--color-text-muted)", border: "1px solid var(--color-border)", background: "var(--color-bg-card)" }}
+                >
+                  <select
+                    value={season}
+                    onChange={(e) => setSeason(Number(e.target.value))}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                    aria-label="Select season"
+                  >
+                    {AVAILABLE_SEASONS.map((s) => (
+                      <option key={s} value={s}>{seasonLabel(s)}</option>
+                    ))}
+                  </select>
+                  <span>{seasonLabel(season)}</span>
+                  <ChevronDown size={11} />
+                </div>
+              </div>
+            )}
+
             {/* Theme toggle */}
             {mounted && (
               <button

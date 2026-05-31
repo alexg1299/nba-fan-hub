@@ -13,22 +13,61 @@ const api = axios.create({
 
 // ─── Games ───────────────────────────────────────────────────────────────────
 
-export async function fetchRecentGames(count = 10): Promise<Game[]> {
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 7);
-  const endDate = new Date(today);
-  endDate.setDate(today.getDate() + 3);
+export function getCurrentSeason(): number {
+  const now = new Date();
+  // NBA season starts in October; if before October use previous year
+  return now.getMonth() < 9 ? now.getFullYear() - 1 : now.getFullYear();
+}
 
+export async function fetchRecentGames(count = 10, season?: number): Promise<Game[]> {
+  const useSeason = season ?? getCurrentSeason();
+
+  // For the current season, filter by a ±7 day window around today
+  // For past seasons, fetch the most recent games of that season
+  const today = new Date();
   const params: Record<string, string | number> = {
     "per_page": count,
-    "start_date": startDate.toISOString().split("T")[0],
-    "end_date": endDate.toISOString().split("T")[0],
-    "seasons[]": new Date().getMonth() < 9 ? new Date().getFullYear() - 1 : new Date().getFullYear(),
+    "seasons[]": useSeason,
   };
+
+  const currentSeason = getCurrentSeason();
+  if (useSeason === currentSeason) {
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - 7);
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 3);
+    params["start_date"] = startDate.toISOString().split("T")[0];
+    params["end_date"] = endDate.toISOString().split("T")[0];
+  }
 
   const res = await api.get("/games", { params });
   return res.data.data as Game[];
+}
+
+/** Fetches every game for a given season by walking cursor-based pages. */
+export async function fetchAllSeasonGames(season?: number): Promise<Game[]> {
+  const useSeason = season ?? getCurrentSeason();
+  const all: Game[] = [];
+  let cursor: number | undefined = undefined;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const params: Record<string, string | number> = {
+      per_page: 100,
+      "seasons[]": useSeason,
+    };
+    if (cursor !== undefined) params.cursor = cursor;
+
+    const res = await api.get("/games", { params });
+    const data = res.data.data as Game[];
+    all.push(...data);
+
+    const nextCursor: number | null = res.data.meta?.next_cursor ?? null;
+    if (!nextCursor || data.length === 0) break;
+    cursor = nextCursor;
+  }
+
+  return all;
 }
 
 export async function fetchGameById(id: number): Promise<Game> {
@@ -57,18 +96,43 @@ export async function fetchTeamById(id: number): Promise<Team> {
 
 // ─── Players ─────────────────────────────────────────────────────────────────
 
-export async function searchPlayers(query: string): Promise<Player[]> {
+export interface PlayerSearchResult {
+  players: Player[];
+  nextCursor: number | null;
+  perPage: number;
+}
+
+export async function searchPlayers(
+  query: string,
+  cursor?: number,
+  perPage = 25,
+): Promise<PlayerSearchResult> {
+  // Try to detect if the query looks like a team abbreviation or name and
+  // resolve to team_ids so the API can filter by team.
+  const params: Record<string, string | number | number[]> = {
+    per_page: perPage,
+  };
+  if (query.trim()) params.search = query.trim();
+  if (cursor) params.cursor = cursor;
+
+  const res = await api.get("/players", { params });
+  return {
+    players: res.data.data as Player[],
+    nextCursor: res.data.meta?.next_cursor ?? null,
+    perPage,
+  };
+}
+
+export async function fetchPlayersByTeam(teamId: number, season?: number): Promise<Player[]> {
   const res = await api.get("/players", {
-    params: { search: query, per_page: 5 },
+    params: { team_ids: [teamId], per_page: 25, seasons: [season ?? getCurrentSeason()] },
   });
   return res.data.data as Player[];
 }
 
-export async function fetchPlayersByTeam(teamId: number): Promise<Player[]> {
-  const res = await api.get("/players", {
-    params: { team_ids: [teamId], per_page: 25, seasons: [getCurrentSeason()] },
-  });
-  return res.data.data as Player[];
+export async function fetchPlayerById(id: number): Promise<Player> {
+  const res = await api.get(`/players/${id}`);
+  return res.data as Player;
 }
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
@@ -89,11 +153,6 @@ export async function fetchSeasonAverages(playerIds: number[], season?: number):
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-export function getCurrentSeason(): number {
-  const now = new Date();
-  return now.getMonth() < 9 ? now.getFullYear() - 1 : now.getFullYear();
-}
 
 export function normalizeGameStatus(game: Game) {
   const statusRaw = game.status?.toLowerCase() || "";

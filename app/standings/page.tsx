@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import StandingsTable from "@/components/StandingsTable";
 import type { StandingsEntry } from "@/types/nba";
+import { useSeason, seasonLabel } from "@/app/context/season-context";
 
 export default function StandingsPage() {
   const [standings, setStandings] = useState<{ east: StandingsEntry[]; west: StandingsEntry[] } | null>(null);
   const [loading, setLoading] = useState(true);
+  const { season } = useSeason();
 
   useEffect(() => {
-    fetch("/api/standings")
+    setLoading(true);
+    setStandings(null);
+    fetch(`/api/standings?season=${season}`)
       .then((r) => r.json())
       .then((d) => setStandings(d.standings))
       .finally(() => setLoading(false));
-  }, []);
+  }, [season]);
 
   return (
     <div className="min-h-screen court-pattern" style={{ background: "var(--color-bg)" }}>
@@ -22,7 +26,7 @@ export default function StandingsPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 page-enter">
         <div className="mb-8">
           <p className="text-xs font-display font-600 tracking-widest uppercase mb-1" style={{ color: "var(--color-accent)" }}>
-            2024-25 Season
+            {seasonLabel(season)} Season
           </p>
           <h1 className="font-display font-800 text-5xl tracking-tight" style={{ color: "var(--color-text)" }}>
             Standings
