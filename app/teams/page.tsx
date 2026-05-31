@@ -1,59 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Shield, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import { Skeleton } from "@/components/Skeleton";
+import { Shield } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import { Skeleton } from "@/components/ui/Skeleton";
+import TeamCard from "@/components/team/TeamCard";
+import type { Team } from "@/components/team/TeamCard";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
-import { getTeamColors } from "@/lib/nba-api";
-
-interface Team {
-  id: number;
-  abbreviation: string;
-  city: string;
-  conference: string;
-  division: string;
-  full_name: string;
-  name: string;
-}
-
-function TeamCard({ team }: { team: Team }) {
-  const colors = getTeamColors(team.abbreviation);
-  return (
-    <Link
-      href={`/teams/${team.id}`}
-      className="group flex items-center justify-between rounded-xl p-4 transition-all hover:scale-[1.01]"
-      style={{
-        background: "var(--color-bg-card)",
-        border: "1px solid var(--color-border)",
-      }}
-    >
-      <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center font-display font-800 text-xs text-white shrink-0"
-          style={{ background: colors.primary }}
-        >
-          {team.abbreviation}
-        </div>
-        <div>
-          <p className="font-display font-700 text-base" style={{ color: "var(--color-text)" }}>
-            {team.full_name}
-          </p>
-          <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
-            {team.division} · {team.conference}ern Conference
-          </p>
-        </div>
-      </div>
-      <ChevronRight
-        size={16}
-        className="transition-transform group-hover:translate-x-1"
-        style={{ color: "var(--color-text-subtle)" }}
-      />
-    </Link>
-  );
-}
-
 export default function TeamsPage() {
   const { season } = useSeason();
   const [teams, setTeams] = useState<Team[]>([]);
@@ -79,13 +32,14 @@ export default function TeamsPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 page-enter">
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-display font-600 tracking-widest uppercase mb-1" style={{ color: "var(--color-accent)" }}>
+          <p className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2" style={{ color: "var(--color-accent)" }}>
+            <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
             League · {seasonLabel(season)}
           </p>
-          <h1 className="font-display font-800 text-5xl tracking-tight mb-2" style={{ color: "var(--color-text)" }}>
-            Teams
+          <h1 className="font-hero text-6xl mb-2" style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}>
+            TEAMS
           </h1>
-          <p style={{ color: "var(--color-text-muted)" }}>Select a team to view roster and player details.</p>
+          <p className="font-body" style={{ color: "var(--color-text-muted)" }}>Select a team to view roster and player details.</p>
         </div>
 
         {loading && (

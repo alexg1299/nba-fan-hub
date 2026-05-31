@@ -10,6 +10,9 @@ interface StatBarProps {
   higherIsBetter?: boolean;
 }
 
+/**
+ * Head-to-head stat comparison bar used in the game detail Team Stats tab.
+ */
 export default function StatBar({
   label,
   homeValue,

@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { Search, User, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import { Skeleton } from "@/components/Skeleton";
+import Navbar from "@/components/layout/Navbar";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
 import { getTeamColors } from "@/lib/nba-api";
 
@@ -122,13 +122,14 @@ export default function PlayersPage() {
       <Navbar />
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 page-enter">
         <div className="mb-8">
-          <p className="text-xs font-display font-600 tracking-widest uppercase mb-1" style={{ color: "var(--color-accent)" }}>
+          <p className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2" style={{ color: "var(--color-accent)" }}>
+            <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
             Database · {seasonLabel(season)}
           </p>
-          <h1 className="font-display font-800 text-5xl tracking-tight mb-2" style={{ color: "var(--color-text)" }}>
-            Players
+          <h1 className="font-hero text-6xl mb-2" style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}>
+            PLAYERS
           </h1>
-          <p style={{ color: "var(--color-text-muted)" }}>
+          <p className="font-body" style={{ color: "var(--color-text-muted)" }}>
             Search by name, team, position, college, country, or jersey number.
           </p>
         </div>

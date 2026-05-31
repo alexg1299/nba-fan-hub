@@ -12,10 +12,10 @@ import {
   RefreshCw,
   TrendingUp,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import GameCard from "@/components/GameCard";
-import { GameCardSkeleton } from "@/components/Skeleton";
-import StandingsTable from "@/components/StandingsTable";
+import Navbar from "@/components/layout/Navbar";
+import GameCard from "@/components/game/GameCard";
+import { GameCardSkeleton } from "@/components/ui/Skeleton";
+import StandingsTable from "@/components/standings/StandingsTable";
 import type { NormalizedGame, StandingsEntry } from "@/types/nba";
 import clsx from "clsx";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
@@ -190,18 +190,19 @@ export default function HomePage() {
           <div className="flex items-end justify-between mb-2">
             <div>
               <p
-                className="text-xs font-display font-600 tracking-widest uppercase mb-1"
+                className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2"
                 style={{ color: "var(--color-accent)" }}
               >
+                <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
                 {today.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
               </p>
               <h1
-                className="font-display font-800 text-5xl sm:text-6xl tracking-tight leading-none"
-                style={{ color: "var(--color-text)" }}
+                className="font-hero text-6xl sm:text-7xl leading-none"
+                style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}
               >
-                {seasonLabel(season)} Season
+                {seasonLabel(season)}
                 <br />
-                <span style={{ color: "var(--color-accent)" }}>Scores Hub</span>
+                <span style={{ color: "var(--color-accent)" }}>SCORES</span>
               </h1>
             </div>
 
@@ -644,13 +645,17 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t mt-16 py-8" style={{ borderColor: "var(--color-border)" }}>
+        <div className="h-[2px] w-full mb-8" style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }} />
         <div
-          className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs"
+          className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2"
           style={{ color: "var(--color-text-subtle)" }}
         >
-          <span className="font-display font-700 tracking-widest uppercase">CourtSide</span>
-          <span>Data via BallDontLie API · Built with Next.js 14</span>
-          <span>NBA Fan Hub</span>
+          <div className="flex items-center gap-2">
+            <span className="font-hero text-xl tracking-widest" style={{ color: "var(--color-text)" }}>COURT</span>
+            <span className="font-hero text-xl tracking-widest" style={{ color: "var(--color-accent)" }}>SIDE</span>
+          </div>
+          <span className="text-xs">Data via BallDontLie API · Built with Next.js</span>
+          <span className="text-xs font-display font-700 tracking-widest uppercase">NBA Fan Hub</span>
         </div>
       </footer>
     </div>

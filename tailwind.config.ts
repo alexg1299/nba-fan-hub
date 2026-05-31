@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["'Barlow Condensed'", "sans-serif"],
+        hero: ["'Anton'", "'Barlow Condensed'", "sans-serif"],
         body: ["'DM Sans'", "sans-serif"],
         mono: ["'JetBrains Mono'", "monospace"],
       },

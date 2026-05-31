@@ -12,6 +12,9 @@ interface PlayerCardProps {
   isHighlighted?: boolean;
 }
 
+/**
+ * Compact player stat card used in game detail player breakdowns.
+ */
 export default function PlayerCard({
   name,
   position,

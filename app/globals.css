@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,33 +6,39 @@
 
 @layer base {
   :root {
-    --color-bg: #F7F5F0;
+    --color-bg: #F7F7F7;
     --color-bg-card: #FFFFFF;
-    --color-bg-elevated: #EDEBE5;
-    --color-text: #17130E;
-    --color-text-muted: #63584A;
-    --color-text-subtle: #9E9070;
-    --color-border: #D9CEB8;
-    --color-accent: #E07800;
-    --color-accent-hover: #FF8C00;
-    --color-live: #22c55e;
-    --shadow-card: 0 1px 3px rgba(23,19,14,0.08), 0 4px 16px rgba(23,19,14,0.04);
-    --shadow-hover: 0 4px 12px rgba(23,19,14,0.12), 0 8px 32px rgba(23,19,14,0.08);
+    --color-bg-elevated: #EEEEEE;
+    --color-text: #111111;
+    --color-text-muted: #555555;
+    --color-text-subtle: #888888;
+    --color-border: #DEDEDE;
+    --color-accent: #FF6200;
+    --color-accent-hover: #FF8230;
+    --color-accent-glow: rgba(255, 98, 0, 0.25);
+    --color-live: #00C853;
+    --color-live-glow: rgba(0, 200, 83, 0.25);
+    --shadow-card: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-accent: 0 4px 20px rgba(255, 98, 0, 0.3);
   }
 
   .dark {
-    --color-bg: #0F0E0C;
-    --color-bg-card: #1A1814;
-    --color-bg-elevated: #242018;
-    --color-text: #F0EDE6;
-    --color-text-muted: #A89D8C;
-    --color-text-subtle: #6B6054;
-    --color-border: #2E2820;
-    --color-accent: #FF8C00;
-    --color-accent-hover: #FFAD47;
-    --color-live: #4ade80;
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.2);
-    --shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.3);
+    --color-bg: #0A0A0A;
+    --color-bg-card: #141414;
+    --color-bg-elevated: #1C1C1C;
+    --color-text: #F5F5F5;
+    --color-text-muted: #999999;
+    --color-text-subtle: #555555;
+    --color-border: #252525;
+    --color-accent: #FF6200;
+    --color-accent-hover: #FF8230;
+    --color-accent-glow: rgba(255, 98, 0, 0.18);
+    --color-live: #00E676;
+    --color-live-glow: rgba(0, 230, 118, 0.18);
+    --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.3);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.4);
+    --shadow-accent: 0 4px 28px rgba(255, 98, 0, 0.35);
   }
 
   * {
@@ -58,60 +64,99 @@
     font-family: var(--font-display), 'Barlow Condensed', sans-serif;
   }
 
+  .font-hero {
+    font-family: 'Anton', 'Barlow Condensed', sans-serif;
+  }
+
   .card {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
   }
 
   .card:hover {
     box-shadow: var(--shadow-hover);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
   }
 
   .btn-primary {
     background: var(--color-accent);
     color: #fff;
     font-family: var(--font-display), sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    transition: background 0.15s, transform 0.1s;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
   }
 
   .btn-primary:hover {
     background: var(--color-accent-hover);
     transform: translateY(-1px);
+    box-shadow: var(--shadow-accent);
   }
 
   .live-badge {
     background: var(--color-live);
-    color: #fff;
+    color: #000;
     font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 2px 6px;
-    border-radius: 3px;
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    padding: 3px 8px;
+    border-radius: 4px;
+    animation: livePulse 2s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--color-live-glow);
   }
 
   .score-display {
-    font-family: var(--font-display), sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-family: 'Anton', var(--font-display), sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     line-height: 1;
   }
 
   .team-abbr {
     font-family: var(--font-display), sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    font-weight: 800;
+    letter-spacing: 0.06em;
   }
 
   .stat-value {
     font-family: var(--font-display), sans-serif;
-    font-weight: 700;
+    font-weight: 800;
+  }
+
+  /* Accent glow utility for dark mode */
+  .accent-glow {
+    box-shadow: 0 0 16px var(--color-accent-glow), 0 0 32px var(--color-accent-glow);
+  }
+
+  /* Orange stripe divider */
+  .stripe-divider {
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent) 0%, transparent 100%);
+    border-radius: 2px;
+  }
+
+  /* Team hero banner */
+  .team-hero-banner {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .team-hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 20px,
+      rgba(255, 255, 255, 0.02) 20px,
+      rgba(255, 255, 255, 0.02) 21px
+    );
+    pointer-events: none;
   }
 }
 
@@ -128,34 +173,65 @@
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-subtle);
+  background: var(--color-accent);
 }
 
-/* Court pattern background utility */
+/* Court pattern background */
 .court-pattern {
-  background-image: 
+  background-image:
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 40px,
-      rgba(224, 120, 0, 0.03) 40px,
-      rgba(224, 120, 0, 0.03) 41px
+      transparent 60px,
+      rgba(255, 98, 0, 0.025) 60px,
+      rgba(255, 98, 0, 0.025) 61px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 40px,
-      rgba(224, 120, 0, 0.03) 40px,
-      rgba(224, 120, 0, 0.03) 41px
+      transparent 60px,
+      rgba(255, 98, 0, 0.025) 60px,
+      rgba(255, 98, 0, 0.025) 61px
     );
+}
+
+/* Diagonal sport pattern */
+.sport-pattern {
+  background-image: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 12px,
+    rgba(255, 98, 0, 0.035) 12px,
+    rgba(255, 98, 0, 0.035) 13px
+  );
 }
 
 /* Page transitions */
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--color-live-glow); }
+  50%       { opacity: 0.85; box-shadow: 0 0 14px var(--color-live-glow); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
 }
 
 .page-enter {
-  animation: pageIn 0.4s ease-out;
+  animation: pageIn 0.35s ease-out;
+}
+
+/* Glowing orange text */
+.text-glow-accent {
+  text-shadow: 0 0 20px var(--color-accent-glow), 0 0 40px var(--color-accent-glow);
+}
+
+/* Team color border accent */
+.team-accent-border {
+  border-left: 4px solid var(--team-primary, var(--color-accent));
 }

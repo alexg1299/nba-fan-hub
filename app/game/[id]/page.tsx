@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Zap, Trophy, Users, BarChart3, AlertCircle } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import PlayerCard from "@/components/PlayerCard";
-import StatBar from "@/components/StatBar";
-import { Skeleton } from "@/components/Skeleton";
+import Navbar from "@/components/layout/Navbar";
+import PlayerCard from "@/components/player/PlayerCard";
+import StatBar from "@/components/game/StatBar";
+import { Skeleton } from "@/components/ui/Skeleton";
+import TeamLogo from "@/components/team/TeamLogo";
 import { getTeamColors } from "@/lib/nba-api";
 import clsx from "clsx";
 
@@ -18,6 +19,7 @@ const TABS = [
   { key: "players", label: "Players", icon: Users },
   { key: "stats", label: "Team Stats", icon: Trophy },
 ];
+
 
 export default function GameDetailPage() {
   const params = useParams();
@@ -156,41 +158,33 @@ export default function GameDetailPage() {
           </div>
 
           {/* Score */}
-          <div className="p-8">
+          <div className="p-6 sm:p-8">
+            {/* Dual color strip */}
+            <div
+              className="h-1 w-full rounded-full mb-6 mx-auto max-w-xs"
+              style={{ background: `linear-gradient(90deg, ${awayColors.primary} 0%, ${awayColors.primary} 50%, ${homeColors.primary} 50%, ${homeColors.primary} 100%)` }}
+            />
             <div className="flex items-center justify-between">
               {/* Away team */}
               <div className="flex flex-col items-center gap-3 flex-1">
-                <div
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white font-display font-800 text-lg sm:text-xl tracking-widest shadow-lg"
-                  style={{ background: awayColors.primary }}
-                >
-                  {game.awayTeam.abbreviation}
-                </div>
+                <TeamLogo abbreviation={game.awayTeam.abbreviation} size={80} variant="box" />
                 <div className="text-center">
                   <p
-                    className="font-display font-800 text-base sm:text-lg tracking-wide uppercase"
+                    className="font-display font-800 text-base sm:text-lg tracking-widest uppercase"
                     style={{ color: "var(--color-text)" }}
                   >
                     {game.awayTeam.city || game.awayTeam.name}
                   </p>
-                  <p
-                    className="text-sm font-body"
-                    style={{ color: "var(--color-text-subtle)" }}
-                  >
-                    Away
-                  </p>
+                  <p className="text-xs font-display font-600 tracking-widest uppercase" style={{ color: "var(--color-text-subtle)" }}>Away</p>
                 </div>
                 <p
-                  className={clsx(
-                    "score-display text-6xl sm:text-7xl",
-                    game.isFinished && !awayWon && "opacity-30"
-                  )}
-                  style={{ color: "var(--color-text)" }}
+                  className={clsx("score-display text-6xl sm:text-7xl", game.isFinished && !awayWon && "opacity-30")}
+                  style={{ color: awayWon ? awayColors.primary : "var(--color-text)" }}
                 >
                   {game.awayTeam.score || (game.isUpcoming ? "—" : 0)}
                 </p>
                 {awayWon && (
-                  <div className="flex items-center gap-1 text-xs font-display font-700 tracking-wide" style={{ color: "var(--color-live)" }}>
+                  <div className="flex items-center gap-1 text-xs font-display font-700 tracking-widest uppercase" style={{ color: "var(--color-live)" }}>
                     <Trophy size={12} />
                     Winner
                   </div>
@@ -219,34 +213,24 @@ export default function GameDetailPage() {
 
               {/* Home team */}
               <div className="flex flex-col items-center gap-3 flex-1">
-                <div
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white font-display font-800 text-lg sm:text-xl tracking-widest shadow-lg"
-                  style={{ background: homeColors.primary }}
-                >
-                  {game.homeTeam.abbreviation}
-                </div>
+                <TeamLogo abbreviation={game.homeTeam.abbreviation} size={80} variant="box" />
                 <div className="text-center">
                   <p
-                    className="font-display font-800 text-base sm:text-lg tracking-wide uppercase"
+                    className="font-display font-800 text-base sm:text-lg tracking-widest uppercase"
                     style={{ color: "var(--color-text)" }}
                   >
                     {game.homeTeam.city || game.homeTeam.name}
                   </p>
-                  <p className="text-sm font-body" style={{ color: "var(--color-text-subtle)" }}>
-                    Home
-                  </p>
+                  <p className="text-xs font-display font-600 tracking-widest uppercase" style={{ color: "var(--color-text-subtle)" }}>Home</p>
                 </div>
                 <p
-                  className={clsx(
-                    "score-display text-6xl sm:text-7xl",
-                    game.isFinished && !homeWon && "opacity-30"
-                  )}
-                  style={{ color: "var(--color-text)" }}
+                  className={clsx("score-display text-6xl sm:text-7xl", game.isFinished && !homeWon && "opacity-30")}
+                  style={{ color: homeWon ? homeColors.primary : "var(--color-text)" }}
                 >
                   {game.homeTeam.score || (game.isUpcoming ? "—" : 0)}
                 </p>
                 {homeWon && (
-                  <div className="flex items-center gap-1 text-xs font-display font-700 tracking-wide" style={{ color: "var(--color-live)" }}>
+                  <div className="flex items-center gap-1 text-xs font-display font-700 tracking-widest uppercase" style={{ color: "var(--color-live)" }}>
                     <Trophy size={12} />
                     Winner
                   </div>

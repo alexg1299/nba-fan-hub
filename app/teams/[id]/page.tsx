@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Users, AlertCircle, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import { Skeleton } from "@/components/Skeleton";
+import Navbar from "@/components/layout/Navbar";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
-import { getTeamColors } from "@/lib/nba-api";
+import { getTeamColors, getTeamLogoUrl } from "@/lib/nba-api";
 
 interface Team {
   id: number;
@@ -52,6 +53,7 @@ export default function TeamDetailPage() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -72,12 +74,32 @@ export default function TeamDetailPage() {
     return (
       <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
         <Navbar />
-        <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-          <Skeleton className="w-24 h-8 rounded-lg" />
-          <Skeleton className="w-full h-32 rounded-2xl" />
-          <div className="space-y-3">
-            {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="w-full h-16 rounded-xl" />)}
+        {/* Skeleton hero with back button still accessible */}
+        <div
+          className="relative overflow-hidden"
+          style={{ background: "var(--color-bg-card)", minHeight: "200px" }}
+        >
+          <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-1.5 mb-6 text-sm font-display font-700 tracking-wide transition-opacity hover:opacity-70"
+              style={{ color: "var(--color-text-muted)" }}
+            >
+              <ArrowLeft size={14} />
+              Teams
+            </button>
+            <div className="flex items-center gap-5">
+              <Skeleton className="w-20 h-20 rounded-2xl shrink-0" />
+              <div className="space-y-2">
+                <Skeleton className="w-16 h-3 rounded" />
+                <Skeleton className="w-64 h-10 rounded-lg" />
+                <Skeleton className="w-32 h-3 rounded" />
+              </div>
+            </div>
           </div>
+        </div>
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 space-y-3">
+          {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="w-full h-16 rounded-xl" />)}
         </main>
       </div>
     );
@@ -103,50 +125,105 @@ export default function TeamDetailPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
       <Navbar />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 page-enter">
-        {/* Back */}
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-1.5 mb-6 text-sm font-display font-600 tracking-wide transition-opacity hover:opacity-70"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          <ArrowLeft size={14} />
-          Teams
-        </button>
 
-        {/* Team header */}
+      {/* Full-width team hero banner */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+          minHeight: "200px",
+        }}
+      >
+        {/* Diagonal sport pattern overlay */}
         <div
-          className="rounded-2xl p-6 mb-8"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: `linear-gradient(135deg, ${colors.primary}22 0%, ${colors.secondary}11 100%)`,
-            border: `1px solid ${colors.primary}44`,
+            backgroundImage: "repeating-linear-gradient(-55deg, transparent, transparent 20px, rgba(0,0,0,0.06) 20px, rgba(0,0,0,0.06) 21px)",
           }}
-        >
-          <div className="flex items-center gap-4">
+        />
+
+        {/* Watermark logo */}
+        <div className="absolute right-0 top-0 bottom-0 flex items-center pr-8 pointer-events-none opacity-10">
+          {!logoError ? (
+            <Image
+              src={getTeamLogoUrl(team.abbreviation)}
+              alt=""
+              width={200}
+              height={200}
+              className="object-contain"
+              onError={() => setLogoError(true)}
+              unoptimized
+            />
+          ) : null}
+        </div>
+
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8 page-enter">
+          {/* Back */}
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 mb-6 text-sm font-display font-700 tracking-wide transition-opacity hover:opacity-70"
+            style={{ color: "rgba(255,255,255,0.8)" }}
+          >
+            <ArrowLeft size={14} />
+            Teams
+          </button>
+
+          <div className="flex items-center gap-5">
+            {/* Team logo */}
             <div
-              className="w-16 h-16 rounded-xl flex items-center justify-center font-display font-900 text-lg text-white shrink-0"
-              style={{ background: colors.primary }}
+              className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,0.25)",
+              }}
             >
-              {team.abbreviation}
+              {!logoError ? (
+                <Image
+                  src={getTeamLogoUrl(team.abbreviation)}
+                  alt={team.abbreviation}
+                  width={64}
+                  height={64}
+                  className="object-contain drop-shadow"
+                  onError={() => setLogoError(true)}
+                  unoptimized
+                />
+              ) : (
+                <span className="font-display font-900 text-2xl text-white">{team.abbreviation}</span>
+              )}
             </div>
+
             <div>
-              <p className="text-xs font-display font-600 tracking-widest uppercase mb-1" style={{ color: colors.primary }}>
+              <p className="text-xs font-display font-700 tracking-widest uppercase mb-1" style={{ color: "rgba(255,255,255,0.7)" }}>
                 {team.conference}ern Conference · {team.division}
               </p>
-              <h1 className="font-display font-800 text-3xl sm:text-4xl tracking-tight" style={{ color: "var(--color-text)" }}>
-                {team.full_name}
+              <h1
+                className="font-hero leading-none text-white"
+                style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "0.03em" }}
+              >
+                {team.full_name?.toUpperCase() ?? team.name?.toUpperCase() ?? team.abbreviation}
               </h1>
-              <p className="text-sm mt-1" style={{ color: "var(--color-text-muted)" }}>
+              <p className="text-sm mt-2" style={{ color: "rgba(255,255,255,0.7)" }}>
                 {seasonLabel(season)} Roster · {players.length} players
               </p>
             </div>
           </div>
         </div>
 
+        {/* Bottom fade */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, var(--color-bg))" }}
+        />
+      </div>
+
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+
         {/* Roster */}
-        <div className="mb-4 flex items-center gap-2">
-          <Users size={16} style={{ color: "var(--color-accent)" }} />
-          <h2 className="font-display font-700 text-lg tracking-wide uppercase" style={{ color: "var(--color-text)" }}>
+        <div className="mb-5 flex items-center gap-3">
+          <div className="w-1 h-6 rounded-full" style={{ background: colors.primary }} />
+          <Users size={16} style={{ color: colors.primary }} />
+          <h2 className="font-display font-800 text-lg tracking-widest uppercase" style={{ color: "var(--color-text)" }}>
             Roster
           </h2>
         </div>
@@ -167,13 +244,20 @@ export default function TeamDetailPage() {
               <Link
                 key={player.id}
                 href={`/players/${player.id}?season=${season}`}
-                className="group flex items-center justify-between rounded-xl p-4 transition-all hover:scale-[1.005]"
-                style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
+                className="group flex items-center justify-between rounded-xl p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{
+                  background: "var(--color-bg-card)",
+                  border: `1px solid var(--color-border)`,
+                  borderLeft: `3px solid ${colors.primary}`,
+                }}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center font-display font-800 text-sm text-white shrink-0"
-                    style={{ background: colors.primary }}
+                    style={{
+                      background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                      boxShadow: `0 2px 8px ${colors.primary}44`,
+                    }}
                   >
                     {player.first_name[0]}{player.last_name[0]}
                   </div>
@@ -184,19 +268,19 @@ export default function TeamDetailPage() {
                     <div className="flex items-center gap-2 mt-0.5">
                       {player.position && (
                         <span
-                          className="text-xs font-display font-600 px-1.5 py-0.5 rounded"
+                          className="text-xs font-display font-700 px-1.5 py-0.5 rounded"
                           style={{ background: `${colors.primary}22`, color: colors.primary }}
                         >
                           {player.position}
                         </span>
                       )}
                       {player.jersey_number && (
-                        <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                        <span className="text-xs font-display font-600" style={{ color: "var(--color-text-muted)" }}>
                           #{player.jersey_number}
                         </span>
                       )}
                       {player.height && (
-                        <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+                        <span className="text-xs" style={{ color: "var(--color-text-subtle)" }}>
                           {player.height}
                         </span>
                       )}
@@ -206,7 +290,7 @@ export default function TeamDetailPage() {
                 <ChevronRight
                   size={16}
                   className="transition-transform group-hover:translate-x-1"
-                  style={{ color: "var(--color-text-subtle)" }}
+                  style={{ color: colors.primary }}
                 />
               </Link>
             ))}

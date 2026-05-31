@@ -8,6 +8,10 @@ interface StandingsTableProps {
   conference: "East" | "West";
 }
 
+/**
+ * Conference standings table with playoff cutline indicator.
+ * Used on both the homepage sidebar and the /standings page.
+ */
 export default function StandingsTable({ teams, conference }: StandingsTableProps) {
   const sorted = [...teams].sort((a, b) => b.winPct - a.winPct);
   const playoffLine = 6;
