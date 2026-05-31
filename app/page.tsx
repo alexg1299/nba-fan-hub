@@ -19,6 +19,8 @@ import StandingsTable from "@/components/standings/StandingsTable";
 import type { NormalizedGame, StandingsEntry } from "@/types/nba";
 import clsx from "clsx";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
+import Footer from "@/components/layout/Footer";
+import Hero from "@/components/layout/Hero";
 
 // ─── types ──────────────────────────────────────────────────────────────────
 
@@ -186,43 +188,7 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
         {/* Hero */}
-        <section className="mb-8 page-enter">
-          <div className="flex items-end justify-between mb-2">
-            <div>
-              <p
-                className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2"
-                style={{ color: "var(--color-accent)" }}
-              >
-                <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
-                {today.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-              </p>
-              <h1
-                className="font-hero text-6xl sm:text-7xl leading-none"
-                style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}
-              >
-                {seasonLabel(season)}
-                <br />
-                <span style={{ color: "var(--color-accent)" }}>SCORES</span>
-              </h1>
-            </div>
-
-            <div className="hidden sm:flex flex-col items-end gap-1">
-              {liveCount > 0 && (
-                <div className="live-badge flex items-center gap-1.5">
-                  <Zap size={10} />
-                  {liveCount} Live {liveCount === 1 ? "Game" : "Games"}
-                </div>
-              )}
-              {dataSource === "mock" && (
-                <p className="text-xs flex items-center gap-1" style={{ color: "var(--color-text-subtle)" }}>
-                  <AlertCircle size={10} />
-                  Demo data
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="h-px w-full mt-6" style={{ background: "var(--color-border)" }} />
-        </section>
+        <Hero title="Scores" dataSource={dataSource} season={season} live={{ count: liveCount }} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -642,22 +608,7 @@ export default function HomePage() {
           </aside>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="border-t mt-16 py-8" style={{ borderColor: "var(--color-border)" }}>
-        <div className="h-[2px] w-full mb-8" style={{ background: "linear-gradient(90deg, var(--color-accent), transparent)" }} />
-        <div
-          className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2"
-          style={{ color: "var(--color-text-subtle)" }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="font-hero text-xl tracking-widest" style={{ color: "var(--color-text)" }}>COURT</span>
-            <span className="font-hero text-xl tracking-widest" style={{ color: "var(--color-accent)" }}>SIDE</span>
-          </div>
-          <span className="text-xs">Data via BallDontLie API · Built with Next.js</span>
-          <span className="text-xs font-display font-700 tracking-widest uppercase">NBA Fan Hub</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import StandingsTable from "@/components/standings/StandingsTable";
 import type { StandingsEntry } from "@/types/nba";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
+import Hero from "@/components/layout/Hero";
 
 export default function StandingsPage() {
   const [standings, setStandings] = useState<{ east: StandingsEntry[]; west: StandingsEntry[] } | null>(null);
@@ -24,15 +25,7 @@ export default function StandingsPage() {
     <div className="min-h-screen court-pattern" style={{ background: "var(--color-bg)" }}>
       <Navbar />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 page-enter">
-        <div className="mb-8">
-          <p className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2" style={{ color: "var(--color-accent)" }}>
-            <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
-            {seasonLabel(season)} Season
-          </p>
-          <h1 className="font-hero text-6xl" style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}>
-            STANDINGS
-          </h1>
-        </div>
+        <Hero title="STANDINGS" dataSource="api" season={season} />
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

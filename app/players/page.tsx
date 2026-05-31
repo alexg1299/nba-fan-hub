@@ -7,6 +7,7 @@ import Navbar from "@/components/layout/Navbar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
 import { getTeamColors } from "@/lib/nba-api";
+import Hero from "@/components/layout/Hero";
 
 interface Player {
   id: number;
@@ -121,18 +122,13 @@ export default function PlayersPage() {
     <div className="min-h-screen court-pattern" style={{ background: "var(--color-bg)" }}>
       <Navbar />
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 page-enter">
-        <div className="mb-8">
-          <p className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2" style={{ color: "var(--color-accent)" }}>
-            <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
-            Database · {seasonLabel(season)}
-          </p>
-          <h1 className="font-hero text-6xl mb-2" style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}>
-            PLAYERS
-          </h1>
-          <p className="font-body" style={{ color: "var(--color-text-muted)" }}>
-            Search by name, team, position, college, country, or jersey number.
-          </p>
-        </div>
+        <Hero
+         title="PLAYERS"
+         dataSource={useCursor ? "api" : "mock"} 
+         accentText="Database" 
+         season={season} 
+         description="Search by name, team, position, college, country, or jersey number."
+        />
 
         {/* Search input */}
         <div className="flex gap-3 mb-6">

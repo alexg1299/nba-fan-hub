@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import TeamCard from "@/components/team/TeamCard";
 import type { Team } from "@/components/team/TeamCard";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
+import Hero from "@/components/layout/Hero";
 export default function TeamsPage() {
   const { season } = useSeason();
   const [teams, setTeams] = useState<Team[]>([]);
@@ -31,16 +32,7 @@ export default function TeamsPage() {
       <Navbar />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 page-enter">
         {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs font-display font-700 tracking-widest uppercase mb-2 flex items-center gap-2" style={{ color: "var(--color-accent)" }}>
-            <span className="inline-block w-4 h-0.5" style={{ background: "var(--color-accent)" }} />
-            League · {seasonLabel(season)}
-          </p>
-          <h1 className="font-hero text-6xl mb-2" style={{ color: "var(--color-text)", letterSpacing: "0.04em" }}>
-            TEAMS
-          </h1>
-          <p className="font-body" style={{ color: "var(--color-text-muted)" }}>Select a team to view roster and player details.</p>
-        </div>
+        <Hero title="TEAMS" dataSource="api" accentText="League" season={season} description="Select a team to view roster and player details." />
 
         {loading && (
           <div className="space-y-3">
