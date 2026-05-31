@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #F7F5F0;
+    --color-bg-card: #FFFFFF;
+    --color-bg-elevated: #EDEBE5;
+    --color-text: #17130E;
+    --color-text-muted: #63584A;
+    --color-text-subtle: #9E9070;
+    --color-border: #D9CEB8;
+    --color-accent: #E07800;
+    --color-accent-hover: #FF8C00;
+    --color-live: #22c55e;
+    --shadow-card: 0 1px 3px rgba(23,19,14,0.08), 0 4px 16px rgba(23,19,14,0.04);
+    --shadow-hover: 0 4px 12px rgba(23,19,14,0.12), 0 8px 32px rgba(23,19,14,0.08);
+  }
+
+  .dark {
+    --color-bg: #0F0E0C;
+    --color-bg-card: #1A1814;
+    --color-bg-elevated: #242018;
+    --color-text: #F0EDE6;
+    --color-text-muted: #A89D8C;
+    --color-text-subtle: #6B6054;
+    --color-border: #2E2820;
+    --color-accent: #FF8C00;
+    --color-accent-hover: #FFAD47;
+    --color-live: #4ade80;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body), 'DM Sans', sans-serif;
+    transition: background-color 0.2s, color 0.2s;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display), 'Barlow Condensed', sans-serif;
+  }
+
+  .card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+    font-family: var(--font-display), sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .live-badge {
+    background: var(--color-live);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .score-display {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .team-abbr {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-value {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-subtle);
+}
+
+/* Court pattern background utility */
+.court-pattern {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 40px,
+      rgba(224, 120, 0, 0.03) 40px,
+      rgba(224, 120, 0, 0.03) 41px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(224, 120, 0, 0.03) 40px,
+      rgba(224, 120, 0, 0.03) 41px
+    );
+}
+
+/* Page transitions */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: pageIn 0.4s ease-out;
+}
