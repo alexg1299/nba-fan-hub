@@ -9,18 +9,18 @@ import {
   ChevronLeft,
   ChevronRight,
   AlertCircle,
-  RefreshCw,
-  TrendingUp,
+  Filter,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import GameCard from "@/components/game/GameCard";
 import { GameCardSkeleton } from "@/components/ui/Skeleton";
-import StandingsTable from "@/components/standings/StandingsTable";
+import WeekStrip from "@/components/game/WeekStrip";
+import HomeSidebar from "@/components/hub/HomeSidebar";
 import type { NormalizedGame, StandingsEntry } from "@/types/nba";
-import clsx from "clsx";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/layout/Hero";
+import FilterTabs from "@/components/ui/filterTabs";
 
 // ─── types ──────────────────────────────────────────────────────────────────
 
@@ -189,187 +189,31 @@ export default function HomePage() {
 
         {/* Hero */}
         <Hero title="Scores" dataSource={dataSource} season={season} live={{ count: liveCount }} />
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           {/* Games Column */}
           <div className="lg:col-span-2 space-y-5">
 
             {/* Filter tabs */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {FILTERS.map(({ key, label, icon: Icon }) => {
-                const isActive = !selectedDate && filter === key;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => selectFilter(key)}
-                    className={clsx(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display font-600 text-xs tracking-wider uppercase transition-all",
-                      isActive ? "text-white shadow-md" : "hover:opacity-80"
-                    )}
-                    style={
-                      isActive
-                        ? { background: "var(--color-accent)" }
-                        : {
-                            background: "var(--color-bg-card)",
-                            color: "var(--color-text-muted)",
-                            border: "1px solid var(--color-border)",
-                          }
-                    }
-                  >
-                    <Icon size={11} />
-                    {label}
-                    {key === "live" && liveCount > 0 && (
-                      <span
-                        className="w-4 h-4 rounded-full text-white text-xs flex items-center justify-center"
-                        style={{ background: "var(--color-live)", fontSize: "9px" }}
-                      >
-                        {liveCount}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={loadData}
-                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-display font-600 text-xs tracking-wider uppercase transition-all hover:opacity-80"
-                style={{
-                  background: "var(--color-bg-card)",
-                  color: "var(--color-text-muted)",
-                  border: "1px solid var(--color-border)",
-                }}
-              >
-                <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
-                Refresh
-              </button>
-            </div>
-
+            <FilterTabs 
+              options={FILTERS} 
+              selectedDate={selectedDate ?? undefined} 
+              filter={filter} onSelect={(f) => selectFilter(f as Filter)} 
+              live={liveCount > 0 ? { count: liveCount } : undefined} 
+              refresh={{ loading, loadData }} 
+            />
             {/* Week Strip */}
-            <div
-              className="rounded-2xl p-4"
-              style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-            >
-              {/* Week nav */}
-              <div className="flex items-center justify-between mb-3">
-                <button
-                  onClick={prevWeek}
-                  className="p-1.5 rounded-lg hover:opacity-70 transition-opacity"
-                  style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-muted)" }}
-                  aria-label="Previous week"
-                >
-                  <ChevronLeft size={14} />
-                </button>
-
-                <div className="flex items-center gap-3">
-                  <span
-                    className="font-display font-700 text-xs tracking-widest uppercase"
-                    style={{ color: "var(--color-text-muted)" }}
-                  >
-                    {week[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    {" — "}
-                    {week[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </span>
-                  <button
-                    onClick={goToToday}
-                    className="text-xs font-display font-600 tracking-wider uppercase px-2 py-0.5 rounded transition-opacity hover:opacity-70"
-                    style={{ color: "var(--color-accent)", border: "1px solid var(--color-accent)" }}
-                  >
-                    Today
-                  </button>
-                </div>
-
-                <button
-                  onClick={nextWeek}
-                  className="p-1.5 rounded-lg hover:opacity-70 transition-opacity"
-                  style={{ background: "var(--color-bg-elevated)", color: "var(--color-text-muted)" }}
-                  aria-label="Next week"
-                >
-                  <ChevronRight size={14} />
-                </button>
-              </div>
-
-              {/* Day pills */}
-              <div className="grid grid-cols-7 gap-1.5">
-                {week.map((d) => {
-                  const iso        = toISO(d);
-                  const isToday    = iso === toISO(today);
-                  const isSelected = selectedDate === iso;
-                  const count      = gameCountByDate[iso] ?? 0;
-                  const dayName    = d.toLocaleDateString("en-US", { weekday: "short" });
-                  const dayNum     = d.getDate();
-
-                  return (
-                    <button
-                      key={iso}
-                      onClick={() => selectDay(d)}
-                      className="flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all hover:opacity-80"
-                      style={
-                        isSelected
-                          ? { background: "var(--color-accent)", color: "#fff" }
-                          : isToday
-                          ? {
-                              background: "var(--color-bg-elevated)",
-                              color: "var(--color-accent)",
-                              border: "1px solid var(--color-accent)",
-                            }
-                          : {
-                              background: "var(--color-bg-elevated)",
-                              color: "var(--color-text-muted)",
-                            }
-                      }
-                    >
-                      <span className="font-display font-700 text-xs tracking-wide uppercase">{dayName}</span>
-                      <span className="font-display font-800 text-base leading-none">{dayNum}</span>
-                      {count > 0 ? (
-                        <span
-                          className="text-xs font-display font-700 leading-none"
-                          style={{ color: isSelected ? "rgba(255,255,255,0.85)" : "var(--color-accent)" }}
-                        >
-                          {count}
-                        </span>
-                      ) : (
-                        <span className="text-xs opacity-0">·</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Date jump */}
-              <div
-                className="mt-3 pt-3 flex items-center gap-2"
-                style={{ borderTop: "1px solid var(--color-border)" }}
-              >
-                <Calendar size={13} style={{ color: "var(--color-text-subtle)" }} />
-                <label
-                  className="font-display font-600 text-xs tracking-wider uppercase"
-                  style={{ color: "var(--color-text-subtle)" }}
-                >
-                  Jump to date
-                </label>
-                <input
-                  type="date"
-                  value={selectedDate ?? ""}
-                  onChange={handleDateInput}
-                  className="ml-auto text-xs font-display font-600 rounded-lg px-2 py-1 outline-none"
-                  style={{
-                    background: "var(--color-bg-elevated)",
-                    color: "var(--color-text)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                />
-                {selectedDate && (
-                  <button
-                    onClick={() => setSelectedDate(null)}
-                    className="text-xs font-display font-600 tracking-wider uppercase hover:opacity-70 transition-opacity"
-                    style={{ color: "var(--color-text-subtle)" }}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </div>
+            <WeekStrip
+              week={week}
+              today={today}
+              selectedDate={selectedDate}
+              gameCountByDate={gameCountByDate}
+              onPrevWeek={prevWeek}
+              onNextWeek={nextWeek}
+              onGoToToday={goToToday}
+              onSelectDay={selectDay}
+              onDateChange={handleDateInput}
+              onClearDate={() => setSelectedDate(null)}
+            />
 
             {/* Active heading + count */}
             <div className="flex items-center gap-2 flex-wrap">
@@ -526,86 +370,7 @@ export default function HomePage() {
           </div>
 
           {/* Sidebar */}
-          <aside className="space-y-6">
-
-            {/* Quick stats strip */}
-            <div
-              className="rounded-2xl p-4 grid grid-cols-3 gap-3"
-              style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-            >
-              {[
-                { label: "Live",     value: liveCount,                                color: "var(--color-live)"        },
-                { label: "Upcoming", value: games.filter((g) => g.isUpcoming).length,  color: "var(--color-accent)"      },
-                { label: "Final",    value: games.filter((g) => g.isFinished).length,  color: "var(--color-text-muted)"  },
-              ].map(({ label, value, color }) => (
-                <div key={label} className="text-center">
-                  <p className="font-display font-800 text-2xl leading-none" style={{ color }}>{value}</p>
-                  <p
-                    className="font-display font-600 text-xs tracking-wider uppercase mt-1"
-                    style={{ color: "var(--color-text-subtle)" }}
-                  >
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Standings */}
-            <div className="flex items-center justify-between">
-              <h2
-                className="font-display font-700 text-lg tracking-wider uppercase"
-                style={{ color: "var(--color-text)" }}
-              >
-                Standings
-              </h2>
-              <a
-                href="/standings"
-                className="text-xs font-display font-600 tracking-wide uppercase hover:underline"
-                style={{ color: "var(--color-accent)" }}
-              >
-                Full Table →
-              </a>
-            </div>
-
-            {standings ? (
-              <>
-                <StandingsTable teams={standings.east.slice(0, 5)} conference="East" />
-                <StandingsTable teams={standings.west.slice(0, 5)} conference="West" />
-              </>
-            ) : (
-              <div className="space-y-4">
-                {[0, 1].map((i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl h-48 animate-pulse"
-                    style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-                  />
-                ))}
-              </div>
-            )}
-
-            {/* What to Watch */}
-            <div
-              className="rounded-2xl p-5"
-              style={{
-                background: "linear-gradient(135deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%)",
-                border: "1px solid var(--color-border)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp size={14} style={{ color: "var(--color-accent)" }} />
-                <p
-                  className="font-display font-700 text-base tracking-wider uppercase"
-                  style={{ color: "var(--color-accent)" }}
-                >
-                  What To Watch
-                </p>
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-                Click any game card to see the full breakdown — key matchups, player stats, quarter-by-quarter scores, and team comparisons.
-              </p>
-            </div>
-          </aside>
+          <HomeSidebar games={games} standings={standings} />
         </div>
       </main>
       <Footer />
