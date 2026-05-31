@@ -28,15 +28,15 @@ export default function StandingsPage() {
         <Hero title="STANDINGS" dataSource="api" season={season} />
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-6">
             {[0, 1].map((i) => (
               <div key={i} className="rounded-2xl h-96 animate-pulse" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }} />
             ))}
           </div>
         ) : standings ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <StandingsTable teams={standings.east} conference="East" />
-            <StandingsTable teams={standings.west} conference="West" />
+          <div className="flex flex-col gap-6">
+            <StandingsTable teams={standings.east} conference="East" compact={false} />
+            <StandingsTable teams={standings.west} conference="West" compact={false} />
           </div>
         ) : (
           <p style={{ color: "var(--color-text-muted)" }}>Unable to load standings.</p>

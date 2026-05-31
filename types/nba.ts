@@ -101,6 +101,11 @@ export interface StandingsEntry {
   winPct: number;
   conference: string;
   rank: number;
+  gamesBack?: number | string;
+  homeRecord?: string;
+  awayRecord?: string;
+  last10?: string;
+  streak?: string;
 }
 
 export interface NormalizedGame {

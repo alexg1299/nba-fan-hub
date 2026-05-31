@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Shield } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import { Skeleton } from "@/components/ui/Skeleton";
+import ConferenceHeading from "@/components/ui/ConferenceHeading";
 import TeamCard from "@/components/team/TeamCard";
 import type { Team } from "@/components/team/TeamCard";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
@@ -56,14 +57,8 @@ export default function TeamsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Eastern Conference */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full" style={{ background: "#006BB6" }} />
-                <h2 className="font-display font-700 text-lg tracking-wide uppercase" style={{ color: "var(--color-text)" }}>
-                  Eastern Conference
-                </h2>
-                <span className="text-xs font-display font-600 px-2 py-0.5 rounded-full" style={{ background: "var(--color-bg-card)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}>
-                  {east.length}
-                </span>
+              <div className="mb-4">
+                <ConferenceHeading conference="East" count={east.length} size="md" />
               </div>
               <div className="space-y-2">
                 {east.map((t) => <TeamCard key={t.id} team={t} />)}
@@ -72,14 +67,8 @@ export default function TeamsPage() {
 
             {/* Western Conference */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 rounded-full" style={{ background: "#CE1141" }} />
-                <h2 className="font-display font-700 text-lg tracking-wide uppercase" style={{ color: "var(--color-text)" }}>
-                  Western Conference
-                </h2>
-                <span className="text-xs font-display font-600 px-2 py-0.5 rounded-full" style={{ background: "var(--color-bg-card)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" }}>
-                  {west.length}
-                </span>
+              <div className="mb-4">
+                <ConferenceHeading conference="West" count={west.length} size="md" />
               </div>
               <div className="space-y-2">
                 {west.map((t) => <TeamCard key={t.id} team={t} />)}
