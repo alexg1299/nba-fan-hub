@@ -86,7 +86,7 @@ export default function GameDetailPage() {
   const homeWon = game.isFinished && game.homeTeam.score > game.awayTeam.score;
   const awayWon = game.isFinished && game.awayTeam.score > game.homeTeam.score;
 
-  const gameDate = new Date(game.date.slice(0, 10) + "T00:00:00").toLocaleDateString("en-US", {
+  const gameDate = new Date((game.date ?? game.gameDate ?? "").slice(0, 10) + "T00:00:00").toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",

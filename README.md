@@ -4,6 +4,15 @@ A modern NBA Game Day companion built with Next.js 14, featuring live scores, ga
 
 ---
 
+## 🔗 Quick Links
+
+| | |
+|---|---|
+| **GitHub Repository** | [github.com/alexg1299/nba-fan-hub](https://github.com/alexg1299/nba-fan-hub) |
+| **Live Demo** | [courtside.vercel.app](https://courtside-jade.vercel.app/) |
+
+---
+
 ## 📸 Features
 
 - **Homepage** — Live scores, recent & upcoming games with filter tabs (All / Live / Today / Final)
@@ -63,7 +72,7 @@ All external API calls happen **server-side only** in Next.js Route Handlers (`a
 - `GET /v1/players` — player search
 - `GET /v1/season_averages` — season stats
 
-Rate limit: ~30 req/min on free tier. The app handles this gracefully.
+Rate limit: ~5 req/min on free tier. The app handles this gracefully.
 
 > **Note on `nba_api` Python package**: The Python `nba_api` package was considered but not used because:
 > 1. It requires a Python backend (FastAPI/Flask) rather than pure Next.js
@@ -186,25 +195,6 @@ Vercel will automatically redeploy on every `git push` to main.
 
 ---
 
-## 🚂 Alternative Deployment: Railway / Render
-
-### Railway
-
-1. Create account at [railway.app](https://railway.app)
-2. New Project → Deploy from GitHub repo
-3. Add `BALLDONTLIE_API_KEY` in Variables tab
-4. Railway auto-detects Next.js and builds/deploys
-
-### Render
-
-1. Create account at [render.com](https://render.com)
-2. New → Web Service → Connect GitHub repo
-3. Build Command: `npm install && npm run build`
-4. Start Command: `npm start`
-5. Add environment variable `BALLDONTLIE_API_KEY`
-
----
-
 ## ⚖️ Tradeoffs & Notes
 
 | Decision | Rationale |
@@ -214,7 +204,7 @@ Vercel will automatically redeploy on every `git push` to main.
 | **Mock data fallback** | Users always see a working UI; rate limits don't break the experience |
 | **CSS variables over Tailwind tokens** | Enables smooth light/dark transitions without class flicker; Tailwind still used for layout |
 | **ISR over SSR** | Games revalidate every 60s via ISR instead of per-request SSR — reduces API call rate and improves performance |
-| **No database** | As specified — pure API integration, no persistence layer needed |
+| **No database** | Pure API integration as specified — no persistence layer needed |
 | **No auth** | Out of scope per spec; the API key stays server-side via env vars |
 
 ### Limitations
@@ -223,18 +213,29 @@ Vercel will automatically redeploy on every `git push` to main.
 - **Live game updates**: Data refreshes only on page load / manual refresh (no WebSockets)
 - **Player headshots**: NBA CDN URLs for player images require authentication; using initials instead
 - **Historical data**: API returns current season; older seasons need explicit `season` parameter
+- **Rate limits**: Free tier allows ~5 req/min — bursting beyond this falls back to mock data automatically
 
 ---
 
 ## 🛠️ AI Tools Used
 
-This project was built with Claude (Anthropic) as a development partner for:
-- Scaffolding the Next.js file structure and component architecture
-- Writing TypeScript interfaces from the BallDontLie API documentation
-- Generating the mock data that mirrors the real API response shape
-- Debugging ISR configuration and dynamic route patterns
+This project used **Claude (Anthropic)** as an active development partner throughout the build. Specific uses:
 
-All generated code was reviewed, adjusted, and tested manually.
+| Area | How AI Was Used |
+|---|---|
+| **Project scaffolding** | Prompted Claude to generate the initial Next.js App Router folder structure, naming conventions, and the breakdown of which files should be Server vs. Client Components |
+| **TypeScript interfaces** | Provided the BallDontLie API JSON response samples; Claude produced the `types/nba.ts` interfaces and the camelCase normalization helpers in `lib/nba-api.ts` |
+| **Mock data** | Asked Claude to generate realistic mock game, standings, and player stat data that exactly mirrors the normalized API response shape — used as the fallback when the API is unavailable |
+| **Debugging** | Pasted error output into Claude to diagnose ISR/`revalidate` config issues with the App Router and dynamic route conflicts |
+| **Component boilerplate** | Used Claude to draft initial versions of repetitive UI components (`StatBar`, `StandingsTable`, `Skeleton`) which were then refined manually |
+
+**What was done manually:**
+- All architectural decisions (ISR vs SSR, CSS variable theming strategy, route handler design)
+- UX/design choices, layout composition, and Tailwind class tuning
+- Code review, integration testing, and fixing any AI-introduced bugs
+- Writing this README
+
+All AI-generated code was reviewed and adjusted before use. AI was treated as a pair-programmer, not an autonomous agent.
 
 ---
 

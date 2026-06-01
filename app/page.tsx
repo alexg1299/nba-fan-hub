@@ -191,7 +191,7 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
         {/* Hero */}
-        <Hero title="HOME" dataSource={dataSource} season={season} live={{ count: liveCount }} />
+        <Hero title="HOME" description="Don't miss the courtside action" dataSource={dataSource} season={season} live={{ count: liveCount }} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Games Column */}
           <div className="lg:col-span-2 space-y-5">

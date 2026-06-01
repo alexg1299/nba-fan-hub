@@ -99,6 +99,15 @@ export const MOCK_STANDINGS: { east: StandingsEntry[]; west: StandingsEntry[] } 
 
 export const MOCK_GAME_DETAIL = {
   id: 1001,
+  date: "2026-05-31",
+  status: "Final",
+  isFinished: true,
+  isLive: false,
+  isUpcoming: false,
+  period: 4,
+  time: "",
+  season: 2025,
+  postseason: true,
   homeTeam: {
     id: 14, name: "Lakers", fullName: "Los Angeles Lakers", abbreviation: "LAL", score: 112, conference: "West",
     topPlayers: [
