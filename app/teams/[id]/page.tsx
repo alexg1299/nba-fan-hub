@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Users, AlertCircle, ChevronRight } from "lucide-react";
+import { Users, AlertCircle, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import BackButton from "@/components/layout/BackButton";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useSeason, seasonLabel } from "@/app/context/season-context";
 import { getTeamColors, getTeamLogoUrl } from "@/lib/nba-api";
@@ -80,14 +81,7 @@ export default function TeamDetailPage() {
           style={{ background: "var(--color-bg-card)", minHeight: "200px" }}
         >
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8">
-            <button
-              onClick={() => router.back()}
-              className="flex items-center gap-1.5 mb-6 text-sm font-display font-700 tracking-wide transition-opacity hover:opacity-70"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              <ArrowLeft size={14} />
-              Teams
-            </button>
+            <BackButton/>
             <div className="flex items-center gap-5">
               <Skeleton className="w-20 h-20 rounded-2xl shrink-0" />
               <div className="space-y-2">
@@ -159,14 +153,7 @@ export default function TeamDetailPage() {
 
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8 page-enter">
           {/* Back */}
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-1.5 mb-6 text-sm font-display font-700 tracking-wide transition-opacity hover:opacity-70"
-            style={{ color: "rgba(255,255,255,0.8)" }}
-          >
-            <ArrowLeft size={14} />
-            Teams
-          </button>
+          <BackButton label="Back" variant="hero" />
 
           <div className="flex items-center gap-5">
             {/* Team logo */}

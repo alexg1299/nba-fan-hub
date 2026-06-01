@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { AlertCircle, BarChart3, User } from "lucide-react";
 import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
@@ -96,40 +96,34 @@ function PctBar({ label, value, color }: { label: string; value: number | null; 
   );
 }
 
-export default function PlayerDetailPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
-        <Navbar />
-        <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-          <Skeleton className="w-24 h-8 rounded-lg" />
-          <Skeleton className="w-full h-36 rounded-2xl" />
-        </main>
-      </div>
-    }>
-      <PlayerDetailContent />
-    </Suspense>
-  );
+interface Props {
+  id: string;
+  initialPlayer: Player | null;
+  initialAverages: SeasonAverages | null;
+  initialSeason: number;
 }
 
-function PlayerDetailContent() {
-  const params = useParams();
+export default function PlayerDetailClient({ id, initialPlayer, initialAverages, initialSeason }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = params?.id as string;
   const { season } = useSeason();
 
-  // Allow override via query param (from team page link)
-  const seasonParam = searchParams.get("season");
-  const effectiveSeason = seasonParam ? Number(seasonParam) : season;
+  const effectiveSeason = season;
 
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [averages, setAverages] = useState<SeasonAverages | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [player, setPlayer] = useState<Player | null>(initialPlayer);
+  const [averages, setAverages] = useState<SeasonAverages | null>(initialAverages);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logoError, setLogoError] = useState(false);
 
+  // Skip first fetch when server already provided data for this season
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (initialPlayer && effectiveSeason === initialSeason) return;
+    }
+
     if (!id) return;
     setLoading(true);
     setError(null);
@@ -142,11 +136,11 @@ function PlayerDetailContent() {
       })
       .catch((e) => setError(e.message || "Failed to load player"))
       .finally(() => setLoading(false));
-  }, [id, effectiveSeason]);
+  }, [id, effectiveSeason, initialPlayer, initialSeason]);
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
+      <div className="min-h-screen page-enter" style={{ background: "var(--color-bg)" }}>
         <Navbar />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">
           <Skeleton className="w-24 h-8 rounded-lg" />
@@ -162,7 +156,7 @@ function PlayerDetailContent() {
 
   if (error || !player) {
     return (
-      <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
+      <div className="min-h-screen page-enter" style={{ background: "var(--color-bg)" }}>
         <Navbar />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center">
           <AlertCircle size={48} className="mx-auto mb-4" style={{ color: "var(--color-accent)" }} />
@@ -178,7 +172,7 @@ function PlayerDetailContent() {
   const colors = getTeamColors(teamAbbr);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--color-bg)" }}>
+    <div className="min-h-screen page-enter" style={{ background: "var(--color-bg)" }}>
       <Navbar />
 
       {/* Full-width player hero banner */}
@@ -228,9 +222,9 @@ function PlayerDetailContent() {
           </div>
         )}
 
-        <div className="relative max-w-2xl mx-auto px-4 sm:px-6 py-8 page-enter">
+        <div className="relative max-w-2xl mx-auto px-4 sm:px-6 py-8">
           {/* Back */}
-          <BackButton  variant="hero" />
+          <BackButton variant="hero" />
 
           <div className="flex items-start gap-5">
             {/* Avatar */}

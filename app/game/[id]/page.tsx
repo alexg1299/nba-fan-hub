@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Zap, Trophy, Users, BarChart3, AlertCircle } from "lucide-react";
+import { Zap, Trophy, Users, BarChart3, AlertCircle } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import BackButton from "@/components/layout/BackButton";
 import PlayerCard from "@/components/player/PlayerCard";
 import StatBar from "@/components/game/StatBar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import TeamLogo from "@/components/team/TeamLogo";
+import Tabs from "@/components/ui/Tabs";
 import { getTeamColors } from "@/lib/nba-api";
 import clsx from "clsx";
 
@@ -99,14 +101,7 @@ export default function GameDetailPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 page-enter">
         {/* Back button */}
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 mb-6 text-sm font-display font-600 tracking-wide hover:opacity-70 transition-opacity"
-          style={{ color: "var(--color-text-muted)" }}
-        >
-          <ArrowLeft size={16} />
-          Back to Scores
-        </button>
+        <BackButton label="Back to Home" />
 
         {dataSource === "mock" && (
           <div
@@ -241,29 +236,12 @@ export default function GameDetailPage() {
         </div>
 
         {/* Tabs */}
-        <div
-          className="flex gap-1 mb-6 p-1 rounded-xl w-fit"
-          style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}
-        >
-          {TABS.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={clsx(
-                "flex items-center gap-2 px-4 py-2 rounded-lg font-display font-600 text-xs tracking-wider uppercase transition-all",
-                activeTab === key ? "text-white shadow-sm" : "hover:opacity-70"
-              )}
-              style={
-                activeTab === key
-                  ? { background: "var(--color-accent)" }
-                  : { color: "var(--color-text-muted)" }
-              }
-            >
-              <Icon size={12} />
-              {label}
-            </button>
-          ))}
-        </div>
+        <Tabs
+          tabs={TABS}
+          active={activeTab}
+          onChange={setActiveTab}
+          className="mb-6"
+        />
 
         {/* Tab content */}
         <div className="animate-fade-in">

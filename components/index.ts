@@ -6,6 +6,8 @@ export { default as SiteLogo } from "./layout/SiteLogo";
 // UI primitives
 export { Skeleton, GameCardSkeleton } from "./ui/Skeleton";
 export { default as ConferenceHeading } from "./ui/ConferenceHeading";
+export { default as Tabs } from "./ui/Tabs";
+export type { TabItem } from "./ui/Tabs";
 
 // Team
 export { default as TeamLogo } from "./team/TeamLogo";

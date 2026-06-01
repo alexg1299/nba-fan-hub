@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import type { StandingsEntry } from "@/types/nba";
 import ConferenceHeading from "@/components/ui/ConferenceHeading";
 import TeamLogo from "@/components/team/TeamLogo";
+import CutlineDivider from "@/components/standings/CutlineDivider";
+import { getRankColor, getStreakColor, sortByWinPct } from "@/lib/standings-utils";
 
 interface StandingsTableProps {
   teams: StandingsEntry[];
@@ -17,7 +20,7 @@ interface StandingsTableProps {
  * Used on both the homepage sidebar (compact=true) and the /standings page (compact=false).
  */
 export default function StandingsTable({ teams, conference, compact = true }: StandingsTableProps) {
-  const sorted = [...teams].sort((a, b) => b.winPct - a.winPct);
+  const sorted = sortByWinPct(teams);
   const playoffLine = 6;
   const playInLine = 10; // ranks 7-10 are play-in
 
@@ -67,9 +70,13 @@ export default function StandingsTable({ teams, conference, compact = true }: St
                   </span>
                   <div className="col-span-5 flex items-center gap-2">
                     <TeamLogo abbreviation={entry.team.abbreviation} size={24} />
-                    <span className="font-body font-500 text-sm" style={{ color: "var(--color-text)" }}>
+                    <Link
+                      href={`/teams/${entry.team.id}`}
+                      className="font-body font-500 text-sm hover:opacity-70 transition-opacity"
+                      style={{ color: "var(--color-text)" }}
+                    >
                       {entry.team.name}
-                    </span>
+                    </Link>
                   </div>
                   <span className="col-span-2 text-center font-display font-700 text-sm" style={{ color: "var(--color-text)" }}>
                     {entry.wins}
@@ -84,9 +91,7 @@ export default function StandingsTable({ teams, conference, compact = true }: St
                     {entry.winPct.toFixed(3)}
                   </span>
                 </div>
-                {isPlayoffBorder && (
-                  <div className="h-px mx-4" style={{ background: "var(--color-accent)", opacity: 0.4 }} />
-                )}
+                {isPlayoffBorder && <CutlineDivider opacity={0.4} />}
               </div>
             );
           })}
@@ -122,18 +127,8 @@ export default function StandingsTable({ teams, conference, compact = true }: St
             const inPlayoffs = idx < playoffLine;
             const inPlayIn = idx >= playoffLine && idx < playInLine;
 
-            const rankColor = inPlayoffs
-              ? "var(--color-accent)"
-              : inPlayIn
-              ? "var(--color-text-muted)"
-              : "var(--color-text-subtle)";
-
-            const streakColor =
-              entry.streak?.startsWith("W")
-                ? "#22c55e"
-                : entry.streak?.startsWith("L")
-                ? "#ef4444"
-                : "var(--color-text-muted)";
+            const rankColor = getRankColor(idx, playoffLine, playInLine);
+            const streakColor = getStreakColor(entry.streak);
 
             return (
               <div key={entry.team.id}>
@@ -150,9 +145,13 @@ export default function StandingsTable({ teams, conference, compact = true }: St
                   </span>
                   <div className="flex items-center gap-2 min-w-0">
                     <TeamLogo abbreviation={entry.team.abbreviation} size={24} className="shrink-0" />
-                    <span className="font-body font-500 text-sm truncate" style={{ color: "var(--color-text)" }}>
+                    <Link
+                      href={`/teams/${entry.team.id}`}
+                      className="font-body font-500 text-sm truncate hover:opacity-70 transition-opacity"
+                      style={{ color: "var(--color-text)" }}
+                    >
                       {entry.team.name}
-                    </span>
+                    </Link>
                   </div>
                   <span className="text-center font-display font-700 text-sm" style={{ color: "var(--color-text)" }}>
                     {entry.wins}
@@ -183,17 +182,9 @@ export default function StandingsTable({ teams, conference, compact = true }: St
                   </span>
                 </div>
 
-                {isPlayoffBorder && (
-                  <div
-                    className="h-px mx-4 flex items-center"
-                    style={{ background: "var(--color-accent)", opacity: 0.5 }}
-                  />
-                )}
+                {isPlayoffBorder && <CutlineDivider />}
                 {isPlayInBorder && (
-                  <div
-                    className="h-px mx-4"
-                    style={{ background: "var(--color-text-subtle)", opacity: 0.3 }}
-                  />
+                  <CutlineDivider color="var(--color-text-subtle)" opacity={0.3} />
                 )}
               </div>
             );

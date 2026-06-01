@@ -115,6 +115,7 @@ export const MOCK_GAME_DETAIL = {
       { name: "Anthony Davis", position: "C", pts: 24, reb: 14, ast: 3, fg_pct: 0.61 },
       { name: "Austin Reaves", position: "G", pts: 18, reb: 4, ast: 5, fg_pct: 0.48 },
     ],
+    teamStats: { fgPct: 0.487, fg3Pct: 0.362, ftPct: 0.812, reb: 44, ast: 24, stl: 8, blk: 5, to: 12 },
   },
   awayTeam: {
     id: 2, name: "Celtics", fullName: "Boston Celtics", abbreviation: "BOS", score: 108, conference: "East",
@@ -123,6 +124,7 @@ export const MOCK_GAME_DETAIL = {
       { name: "Jaylen Brown", position: "SG", pts: 26, reb: 6, ast: 3, fg_pct: 0.44 },
       { name: "Kristaps Porzingis", position: "C", pts: 19, reb: 7, ast: 2, fg_pct: 0.55 },
     ],
+    teamStats: { fgPct: 0.461, fg3Pct: 0.338, ftPct: 0.778, reb: 41, ast: 22, stl: 7, blk: 3, to: 14 },
   },
   keyMatchups: [
     { title: "Star Power Clash", description: "LeBron James vs Jayson Tatum — the generational matchup", homePlayer: "LeBron James", awayPlayer: "Jayson Tatum", homeStat: "28 PTS / 8 REB", awayStat: "31 PTS / 9 REB" },
@@ -134,10 +136,6 @@ export const MOCK_GAME_DETAIL = {
     { label: "Q3", home: 29, away: 26 },
     { label: "Q4", home: 28, away: 28 },
   ],
-  teamStats: {
-    home: { fgPct: 0.487, fg3Pct: 0.362, ftPct: 0.812, reb: 44, ast: 24, stl: 8, blk: 5, to: 12 },
-    away: { fgPct: 0.461, fg3Pct: 0.338, ftPct: 0.778, reb: 41, ast: 22, stl: 7, blk: 3, to: 14 },
-  },
 };
 
 // ─── Mock Teams ───────────────────────────────────────────────────────────────
