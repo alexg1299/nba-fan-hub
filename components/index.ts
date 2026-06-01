@@ -30,4 +30,3 @@ export { default as StandingsTable } from "./standings/StandingsTable";
 // Hub
 export { default as HomeSidebar } from "./hub/HomeSidebar";
 export { default as QuickStatsStrip } from "./hub/QuickStatsStrip";
-export { default as WhatToWatch } from "./hub/WhatToWatch";
