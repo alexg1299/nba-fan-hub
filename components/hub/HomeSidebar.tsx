@@ -60,8 +60,9 @@ export default function HomeSidebar({ games, standings }: HomeSidebarProps) {
         </div>
       )}
 
-      {/* What to Watch */}
+      {/* What to Watch 
       <InsightCard title="What To Watch" message="Click any game card to see the full breakdown — key matchups, player stats, quarter-by-quarter scores, and team comparisons." />
-    </aside>
+        */}
+      </aside>
   );
 }

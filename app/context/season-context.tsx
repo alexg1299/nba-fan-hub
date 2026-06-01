@@ -17,8 +17,8 @@ interface SeasonContextValue {
 const SeasonContext = createContext<SeasonContextValue | null>(null);
 
 export function SeasonProvider({ children }: { children: ReactNode }) {
-  // Default: 2024 = 2024-25 season (most recent full season as of May 2026)
-  const [season, setSeason] = useState<number>(2024);
+  // Default: 2025 = 2025-26 season
+  const [season, setSeason] = useState<number>(2025);
 
   return (
     <SeasonContext.Provider value={{ season, setSeason }}>

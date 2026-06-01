@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon, Activity, Trophy, Users, Menu, X, ChevronDown, Shield } from "lucide-react";
+import { Sun, Moon, Home, Trophy, Users, Menu, X, ChevronDown, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -10,7 +10,7 @@ import { useSeason, AVAILABLE_SEASONS, seasonLabel } from "@/app/context/season-
 import SiteLogo from "./SiteLogo";
 
 const NAV_LINKS = [
-  { href: "/", label: "Scores", icon: Activity },
+  { href: "/", label: "Home", icon: Home },
   { href: "/standings", label: "Standings", icon: Trophy },
   { href: "/teams", label: "Teams", icon: Shield },
   { href: "/players", label: "Players", icon: Users },

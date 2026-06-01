@@ -56,7 +56,8 @@ function TeamSide({
 export default function GameCard({ game }: GameCardProps) {
   const homeWon = game.isFinished && game.homeTeam.score > game.awayTeam.score;
   const awayWon = game.isFinished && game.awayTeam.score > game.homeTeam.score;
-  const gameDate = new Date(game.date);
+  // Append T00:00:00 so the string is parsed as local time, not UTC
+  const gameDate = new Date(game.date.slice(0, 10) + "T00:00:00");
   const isToday = new Date().toDateString() === gameDate.toDateString();
 
   const dateLabel = isToday

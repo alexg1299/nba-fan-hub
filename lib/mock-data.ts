@@ -1,9 +1,18 @@
 import type { NormalizedGame, StandingsEntry, Team, Player, SeasonAverages } from "@/types/nba";
 
+function localISO(offsetDays = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export const MOCK_GAMES: NormalizedGame[] = [
   {
     id: 1001,
-    date: new Date(Date.now() - 86400000).toISOString(),
+    date: localISO(-1),
     status: "Final",
     homeTeam: { id: 14, name: "Lakers", fullName: "Los Angeles Lakers", abbreviation: "LAL", score: 112, conference: "West" },
     awayTeam: { id: 2, name: "Celtics", fullName: "Boston Celtics", abbreviation: "BOS", score: 108, conference: "East" },
@@ -11,7 +20,7 @@ export const MOCK_GAMES: NormalizedGame[] = [
   },
   {
     id: 1002,
-    date: new Date(Date.now() - 86400000).toISOString(),
+    date: localISO(-1),
     status: "Final",
     homeTeam: { id: 11, name: "Warriors", fullName: "Golden State Warriors", abbreviation: "GSW", score: 124, conference: "West" },
     awayTeam: { id: 20, name: "Knicks", fullName: "New York Knicks", abbreviation: "NYK", score: 119, conference: "East" },
@@ -19,7 +28,7 @@ export const MOCK_GAMES: NormalizedGame[] = [
   },
   {
     id: 1003,
-    date: new Date().toISOString(),
+    date: localISO(),
     status: "7:30 pm ET",
     homeTeam: { id: 5, name: "Bulls", fullName: "Chicago Bulls", abbreviation: "CHI", score: 0, conference: "East" },
     awayTeam: { id: 8, name: "Mavericks", fullName: "Dallas Mavericks", abbreviation: "DAL", score: 0, conference: "West" },
@@ -27,7 +36,7 @@ export const MOCK_GAMES: NormalizedGame[] = [
   },
   {
     id: 1004,
-    date: new Date().toISOString(),
+    date: localISO(),
     status: "Q3 8:42",
     homeTeam: { id: 15, name: "Clippers", fullName: "Los Angeles Clippers", abbreviation: "LAC", score: 87, conference: "West" },
     awayTeam: { id: 22, name: "Thunder", fullName: "Oklahoma City Thunder", abbreviation: "OKC", score: 91, conference: "West" },
@@ -35,7 +44,7 @@ export const MOCK_GAMES: NormalizedGame[] = [
   },
   {
     id: 1005,
-    date: new Date(Date.now() + 86400000).toISOString(),
+    date: localISO(1),
     status: "8:00 pm ET",
     homeTeam: { id: 19, name: "Heat", fullName: "Miami Heat", abbreviation: "MIA", score: 0, conference: "East" },
     awayTeam: { id: 9, name: "Nuggets", fullName: "Denver Nuggets", abbreviation: "DEN", score: 0, conference: "West" },
@@ -43,7 +52,7 @@ export const MOCK_GAMES: NormalizedGame[] = [
   },
   {
     id: 1006,
-    date: new Date(Date.now() - 172800000).toISOString(),
+    date: localISO(-2),
     status: "Final",
     homeTeam: { id: 25, name: "Spurs", fullName: "San Antonio Spurs", abbreviation: "SAS", score: 98, conference: "West" },
     awayTeam: { id: 30, name: "Wizards", fullName: "Washington Wizards", abbreviation: "WAS", score: 105, conference: "East" },
@@ -376,4 +385,5 @@ export function searchMockPlayers(
   const players = filtered.slice(start, start + perPage);
   return { players, total, hasMore: start + perPage < total };
 }
+
 

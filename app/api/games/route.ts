@@ -51,7 +51,7 @@ export async function GET(req: Request) {
     const sorted = normalized.sort((a, b) => {
       if (a.isLive && !b.isLive) return -1;
       if (!a.isLive && b.isLive) return 1;
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
+      return new Date(b.date.slice(0, 10) + "T00:00:00").getTime() - new Date(a.date.slice(0, 10) + "T00:00:00").getTime();
     });
 
     return NextResponse.json({ games: sorted, source: "api" });

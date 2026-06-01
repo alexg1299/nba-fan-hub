@@ -42,7 +42,10 @@ function startOfDay(d: Date) {
 }
 
 function toISO(d: Date) {
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function weekStart(d: Date) {
@@ -80,7 +83,7 @@ export default function HomePage() {
 
   const today                             = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor]       = useState<Date>(today);
-  const [selectedDate, setSelectedDate]   = useState<string | null>(null);
+  const [selectedDate, setSelectedDate]   = useState<string | null>(toISO(startOfDay(new Date())));
   const week                              = useMemo(() => buildWeek(weekAnchor), [weekAnchor]);
 
   async function loadData() {
@@ -188,7 +191,7 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
         {/* Hero */}
-        <Hero title="Scores" dataSource={dataSource} season={season} live={{ count: liveCount }} />
+        <Hero title="Courtside" subtitle="Don't miss the courtside action" dataSource={dataSource} season={season} live={{ count: liveCount }} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Games Column */}
           <div className="lg:col-span-2 space-y-5">

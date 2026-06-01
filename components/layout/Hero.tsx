@@ -31,8 +31,8 @@ export default function Hero({ title, subtitle, description, dataSource, season,
                 {title}
                 {subtitle &&
                     <>
-                        <br />
-                        <span style={{ color: "var(--color-accent)" }}>{subtitle}</span>
+                    <br />
+                        <span className="text-2xl" style={{ color: "var(--color-accent)" }}>{subtitle}</span>
                     </>
                 }
               </h1>
