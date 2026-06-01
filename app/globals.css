@@ -24,21 +24,21 @@
   }
 
   .dark {
-    --color-bg: #0A0A0A;
-    --color-bg-card: #141414;
-    --color-bg-elevated: #1C1C1C;
+    --color-bg: #111111;
+    --color-bg-card: #1E1E1E;
+    --color-bg-elevated: #2A2A2A;
     --color-text: #F5F5F5;
-    --color-text-muted: #999999;
-    --color-text-subtle: #555555;
-    --color-border: #252525;
-    --color-accent: #FF6200;
-    --color-accent-hover: #FF8230;
-    --color-accent-glow: rgba(255, 98, 0, 0.18);
-    --color-live: #00E676;
-    --color-live-glow: rgba(0, 230, 118, 0.18);
-    --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.3);
-    --shadow-hover: 0 8px 32px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.4);
-    --shadow-accent: 0 4px 28px rgba(255, 98, 0, 0.35);
+    --color-text-muted: #CCCCCC;
+    --color-text-subtle: #888888;
+    --color-border: #3D3D3D;
+    --color-accent: #FF7A1A;
+    --color-accent-hover: #FF9A4D;
+    --color-accent-glow: rgba(255, 122, 26, 0.25);
+    --color-live: #34D399;
+    --color-live-glow: rgba(52, 211, 153, 0.25);
+    --shadow-card: 0 1px 4px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.25);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.3);
+    --shadow-accent: 0 4px 28px rgba(255, 122, 26, 0.4);
   }
 
   * {
